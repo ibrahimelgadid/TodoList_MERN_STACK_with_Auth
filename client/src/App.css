@@ -1,0 +1,26 @@
+
+.landing{
+  background-image: url('./image/05\ \(2\).jpg');
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+
+.active{
+  color: rgb(255, 255, 255) !important;
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0!important;
+}
+
+.btn-info{
+  color: rgb(255, 255, 255)!important;
+}
+
+.register > .card ,.register >  .row{
+  padding: 0 !important;
+}
+
+.skull {
+  font-size: 150px;
+}
