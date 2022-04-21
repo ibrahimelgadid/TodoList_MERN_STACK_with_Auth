@@ -27,6 +27,7 @@ const Tasks = () => {
 
   const deleteTaskFunDispatch = (id) => {
     deleteTaskFunHandler(id);
+    if (tasks.length === 1) setSearchParams({ page: 1, search: "" });
   };
 
   const searchFunHandler = (e) => {
