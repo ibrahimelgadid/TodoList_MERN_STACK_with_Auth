@@ -12,9 +12,9 @@ import {
 //---------------------------------------------|
 //           GET TASKS
 //---------------------------------------------|
-export const getTasksFun = () => (dispatch) => {
+export const getTasksFun = (search, page) => (dispatch) => {
   axios
-    .get("todo/task")
+    .get("/todo/task?search=" + search + "&page=" + page)
     .then((res) => {
       dispatch({
         type: GET_TASKS,

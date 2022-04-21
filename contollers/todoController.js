@@ -46,22 +46,21 @@ const createTask = asyncHandler(async (req, res) => {
 //           Get All Tasks functionality
 //---------------------------------------------|
 const getTasks = asyncHandler(async (req, res) => {
-  let tasks;
-
-  if (req.query.search) {
-    tasks = await Todo.find({
-      $or: [
-        { title: { $regex: req.query.search, $options: "i" } },
-        { body: { $regex: req.query.search, $options: "i" } },
-      ],
-    }).populate("user", "-password");
-  } else {
-    tasks = await Todo.find().populate("user", "-password");
-  }
+  const page = req.query.page ? req.query.page : 1;
+  const queries = {
+    $or: [
+      { title: { $regex: req.query.search, $options: "i" } },
+      { body: { $regex: req.query.search, $options: "i" } },
+    ],
+  };
+  const tasks = await Todo.find(queries)
+    .limit(2)
+    .skip((page - 1) * 2)
+    .populate("user", "-password");
 
   if (tasks) {
-    let todosCount = await Todo.count();
-    res.status(200).json({ todosCount, tasks });
+    let todosCount = await Todo.count(queries);
+    res.status(200).json({ todosCount: Math.ceil(todosCount / 2), tasks });
   } else {
     res.status(400).json({ getError: "There's no tasks" });
   }
