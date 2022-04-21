@@ -10,7 +10,6 @@ const Todo = require("../models/todoModel");
 const validateTodoInputs = require("../validation/todoValidate");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-////////////////////////////////////////////////
 
 //---------------------------------------------|
 //           Create New functionality
@@ -42,13 +41,24 @@ const createTask = asyncHandler(async (req, res) => {
     }
   }
 });
-////////////////////////////////////////////////
 
 //---------------------------------------------|
 //           Get All Tasks functionality
 //---------------------------------------------|
 const getTasks = asyncHandler(async (req, res) => {
-  let tasks = await Todo.find().populate("user", "-password");
+  let tasks;
+
+  if (req.query.search) {
+    tasks = await Todo.find({
+      $or: [
+        { title: { $regex: req.query.search, $options: "i" } },
+        { body: { $regex: req.query.search, $options: "i" } },
+      ],
+    }).populate("user", "-password");
+  } else {
+    tasks = await Todo.find().populate("user", "-password");
+  }
+
   if (tasks) {
     let todosCount = await Todo.count();
     res.status(200).json({ todosCount, tasks });
@@ -56,7 +66,6 @@ const getTasks = asyncHandler(async (req, res) => {
     res.status(400).json({ getError: "There's no tasks" });
   }
 });
-////////////////////////////////////////////////
 
 //---------------------------------------------|
 //           Get Task By ID functionality
@@ -72,7 +81,6 @@ const getTaskById = asyncHandler(async (req, res) => {
     res.status(400).json({ getError: "There's no task for this id" });
   }
 });
-////////////////////////////////////////////////
 
 //---------------------------------------------|
 //           Update Task By ID functionality
@@ -104,7 +112,6 @@ const updateTaskById = asyncHandler(async (req, res) => {
     res.status(400).json(errors);
   }
 });
-////////////////////////////////////////////////
 
 //---------------------------------------------|
 //           Delete Task By ID functionality
@@ -117,7 +124,6 @@ const deleteTaskById = asyncHandler(async (req, res) => {
     res.status(400).json({ deleteError: "There's no task for this id" });
   }
 });
-////////////////////////////////////////////////
 
 //
 //
