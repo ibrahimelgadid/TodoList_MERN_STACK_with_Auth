@@ -19,7 +19,6 @@ const taskReducer = (state = initialState, action) => {
       return {
         ...state,
         tasks: state.tasks.filter((task) => task._id !== action.payload),
-        tasksCount: action.payload.todosCount,
         loading: false,
       };
 
